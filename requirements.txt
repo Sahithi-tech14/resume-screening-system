@@ -32,3 +32,4 @@ reportlab==4.0.7
 
 # Environment Variables (recommended)
 python-dotenv==1.0.0
+gunicorn==23.0.0
