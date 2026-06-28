@@ -1,20 +1,3 @@
-"""
-Configuration file for the Resume Screening System.
-Contains all application settings and constants.
-
-WHY THIS FILE IS REQUIRED:
-- Centralizes all configuration settings
-- Makes the application easier to configure
-- Separates configuration from code
-- Allows different settings for development/production
-
-WHAT THIS FILE DOES:
-- Defines secret key for session management
-- Sets database path
-- Configures upload folder settings
-- Defines allowed file extensions
-"""
-
 import os
 
 # Base directory of the application
