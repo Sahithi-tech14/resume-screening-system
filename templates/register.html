@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Register - AI Resume Screening{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-success text-white text-center py-4">
+                <h3 class="mb-0">
+                    <i class="bi bi-person-plus me-2"></i>Create Account
+                </h3>
+                <p class="mb-0 mt-2 opacity-75">Start analyzing your resumes today</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">
+                            <i class="bi bi-person me-1"></i>Username
+                        </label>
+                        <input type="text" class="form-control form-control-lg" id="username"
+                               name="username" placeholder="Choose a username"
+                               minlength="3" required autofocus>
+                        <div class="form-text">Minimum 3 characters</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">
+                            <i class="bi bi-envelope me-1"></i>Email Address
+                        </label>
+                        <input type="email" class="form-control form-control-lg" id="email"
+                               name="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">
+                            <i class="bi bi-lock me-1"></i>Password
+                        </label>
+                        <input type="password" class="form-control form-control-lg" id="password"
+                               name="password" placeholder="Create a password"
+                               minlength="6" required>
+                        <div class="form-text">Minimum 6 characters</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label">
+                            <i class="bi bi-lock-fill me-1"></i>Confirm Password
+                        </label>
+                        <input type="password" class="form-control form-control-lg" id="confirm_password"
+                               name="confirm_password" placeholder="Confirm your password" required>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-person-plus me-2"></i>Create Account
+                        </button>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <p class="mb-0 text-muted">
+                        Already have an account?
+                        <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-bold">
+                            Login here
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <p class="text-muted small">
+                <i class="bi bi-shield-lock me-1"></i>
+                Passwords are stored securely using hashing
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

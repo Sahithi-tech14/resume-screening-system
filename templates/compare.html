@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Compare Resumes - AI Resume Screening{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>
+            <i class="bi bi-arrows-angle-expand me-2"></i>Resume Comparison
+        </h2>
+        <p class="text-muted">Compare multiple resumes for candidate ranking</p>
+    </div>
+</div>
+
+{% if ranked_scores %}
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white border-0 py-3">
+        <h5 class="mb-0">
+            <i class="bi bi-bar-chart me-2"></i>Candidate Rankings
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <canvas id="comparisonChart" height="80"></canvas>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-light border-0 h-100">
+                    <div class="card-body text-center">
+                        <i class="bi bi-trophy text-warning display-4 mb-2"></i>
+                        <h6 class="text-muted">Top Candidate</h6>
+                        <h4 class="mb-1">{{ ranked_scores[0].candidate_name or 'Unknown' }}</h4>
+                        <div class="display-6 text-primary fw-bold">
+                            {{ ranked_scores[0].overall_ats_score|round(1) }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="table-light">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Candidate</th>
+                        <th>File</th>
+                        <th class="text-center">Overall</th>
+                        <th class="text-center">Skills</th>
+                        <th class="text-center">Keywords</th>
+                        <th class="text-center">Relevance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in ranked_scores %}
+                    <tr class="{% if loop.index <= 3 %}table-success{% endif %}">
+                        <td>
+                            <span class="badge rounded-pill
+                                {% if loop.index == 1 %}bg-warning
+                                {% elif loop.index == 2 %}bg-secondary
+                                {% elif loop.index == 3 %}bg-danger
+                                {% else %}bg-light text-dark{% endif %}">
+                                {{ loop.index }}
+                            </span>
+                        </td>
+                        <td>{{ score.candidate_name or 'Unknown' }}</td>
+                        <td>{{ score.filename }}</td>
+                        <td class="text-center fw-bold">{{ score.overall_ats_score|round(1) }}%</td>
+                        <td class="text-center">{{ score.skill_match_score|round(1) }}%</td>
+                        <td class="text-center">{{ score.keyword_match_score|round(1) }}%</td>
+                        <td class="text-center">{{ score.relevance_score|round(1) }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="card border-0 shadow-sm">
+    <div class="card-body text-center py-5">
+        <i class="bi bi-bar-chart-line display-1 text-muted mb-3"></i>
+        <h4 class="text-muted">No Data Available</h4>
+        <p class="text-muted">Upload resumes to compare and rank candidates.</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if ranked_scores %}
+<script>
+const ctx = document.getElementById('comparisonChart').getContext('2d');
+const scores = {{ ranked_scores | tojson }};
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: scores.map(s => s.candidate_name || 'Unknown'),
+        datasets: [
+            {
+                label: 'Skills',
+                data: scores.map(s => s.skill_match_score),
+                backgroundColor: 'rgba(13, 110, 253, 0.7)'
+            },
+            {
+                label: 'Keywords',
+                data: scores.map(s => s.keyword_match_score),
+                backgroundColor: 'rgba(25, 135, 84, 0.7)'
+            },
+            {
+                label: 'Relevance',
+                data: scores.map(s => s.relevance_score),
+                backgroundColor: 'rgba(255, 193, 7, 0.7)'
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100
+            }
+        }
+    }
+});
+</script>
+{% endif %}
+{% endblock %}
